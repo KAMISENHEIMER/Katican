@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar.tsx';
-import BookCard from '../components/BookCard.tsx';
 import BookModal from '../components/BookModal.tsx';
+import LibraryGrid from '../components/LibraryGrid';
+import LibrarySidebar from '../components/LibrarySidebar';
 import '../styles/Library.css';
 
 // CHANGE HERE to when switching to render
-const API_URL = "http://localhost:3000"; 
+const API_URL = "http://localhost:3000";
 
 const Library = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBook, setSelectedBook] = useState(null);
-  
+
   //get category from URL parameter
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialCategory = searchParams.get('category') || '';
+  const initialCategory = searchParams.get('category');
 
   //filter states
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('title'); 
-  const [activeCategory, setActiveCategory] = useState(initialCategory);
+  const [sortOption, setSortOption] = useState('title');
 
+  //tag - filters
+  const [selectedTags, setSelectedTags] = useState(
+    initialCategory ? [initialCategory] : []
+  );
+
+  //status - filters
+  const [showAvailable, setShowAvailable] = useState(true);
+  const [showCheckedOut, setShowCheckedOut] = useState(true);
+
+  const allTags = [
+    'Fantasy', 'Space', 'Heroes',
+    'Comedy', 'Tragedy', 'Poetry',
+    'Adventure',
+  ];
+
+  //fetch entire book list
   useEffect(() => {
     fetch(`${API_URL}/books`)
       .then(res => res.json())
@@ -35,31 +51,42 @@ const Library = () => {
       });
   }, []);
 
-  useEffect(() => {
-    setActiveCategory(searchParams.get('category') || '');
-  }, [searchParams]);
-
+  //apply filtering to books
   const getProcessedBooks = () => {
     let processed = [...books];
 
-    if (activeCategory && activeCategory !== 'All Collection') {
-      processed = processed.filter(book => 
-        book.category?.toLowerCase() === activeCategory.toLowerCase()
+    //filter by selected tags
+    if (selectedTags.length > 0) {
+      processed = processed.filter(book =>
+        book.category && selectedTags.some(tag =>
+          book.category.toLowerCase() === tag.toLowerCase()
+        )
       );
     }
 
+    //filter by selected statuses
+    processed = processed.filter(book => {
+      if (book.status === 'available' && !showAvailable) return false;
+      if (book.status !== 'available' && !showCheckedOut) return false;
+      return true;
+    });
+
+    //filter by search bar
     if (searchQuery) {
       const lowerQuery = searchQuery.toLowerCase();
-      processed = processed.filter(book => 
-        book.title.toLowerCase().includes(lowerQuery) || 
+      processed = processed.filter(book =>
+        book.title.toLowerCase().includes(lowerQuery) ||
         book.author.toLowerCase().includes(lowerQuery)
       );
     }
 
+    //sort by chosen option
     processed.sort((a, b) => {
       if (sortOption === 'title') return a.title.localeCompare(b.title);
       if (sortOption === 'author') return a.author.localeCompare(b.author);
-      if (sortOption === 'status') return a.status.localeCompare(b.status);
+      // if (sortOption === 'status') return a.status.localeCompare(b.status);
+      //add upload date
+      //add likes?
       return 0;
     });
 
@@ -68,47 +95,45 @@ const Library = () => {
 
   const visibleBooks = getProcessedBooks();
 
-  const handleCategoryChange = (category) => {
-    if (activeCategory.toLowerCase() === category.toLowerCase()) {
-      setActiveCategory('');
-      setSearchParams({});
-    } else {
-      setActiveCategory(category);
-      setSearchParams({ category });
-    }
+  const toggleTag = (tag) => {
+    setSelectedTags(prev =>
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
   };
 
+  //checkout logic
   const handleCheckout = (bookId, userName) => {
     fetch(`${API_URL}/checkout`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bookId, userName })
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) {
-        alert(data.error);
-      } else {
-        alert("Book successfully checked out!");
-        setBooks(prevBooks => prevBooks.map(b => 
-          b._id === bookId ? { ...b, status: 'checked out', checkedOutBy: userName } : b
-        ));
-        setSelectedBook(null);
-      }
-    })
-    .catch(err => console.error("Checkout failed:", err));
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert("Book successfully checked out!");
+          setBooks(prevBooks => prevBooks.map(b =>
+            b._id === bookId ? { ...b, status: 'checked out', checkedOutBy: userName } : b
+          ));
+          setSelectedBook(null);
+        }
+      })
+      .catch(err => console.error("Checkout failed:", err));
   };
 
   return (
     <div className="library-container">
       <Navbar />
-      
+
       <div className="library-header">
         <h1 className="library-title">LIBRARY</h1>
-        
         <div className="search-container">
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="search-input"
             placeholder="Search by Title or Author..."
             value={searchQuery}
@@ -119,75 +144,31 @@ const Library = () => {
 
       <div className="library-ocean-layer">
         <div className="library-content-wrapper">
-          
-          {/* left: book grid */}
-          <div className="library-grid">
-            {loading ? (
-              <div className="loading-state">Accessing Archives...</div>
-            ) : visibleBooks.length > 0 ? (
-              visibleBooks.map(book => (
-                <BookCard 
-                  key={book._id} 
-                  book={book} 
-                  onClick={() => setSelectedBook(book)} 
-                />
-              ))
-            ) : (
-              <div className="empty-state">No books matching your criteria.</div>
-            )}
-          </div>
 
-          {/* right: filters */}
-          <aside className="library-sidebar">
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Sort Archives</h3>
-              <select 
-                className="sort-select" 
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-              >
-                <option value="title">Alphabetical (A-Z)</option>
-                <option value="author">Author (A-Z)</option>
-                <option value="status">Availability</option>
-              </select>
-            </div>
+          <LibraryGrid
+            loading={loading}
+            books={visibleBooks}
+            onBookClick={setSelectedBook}
+          />
 
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Filter by Category</h3>
-              <div className="filter-group">
-                {['Fantasy', 'Space', 'Heroes'].map(cat => (
-                  <label key={cat} className="filter-label">
-                    <input 
-                      type="checkbox" 
-                      className="filter-checkbox"
-                      checked={activeCategory.toLowerCase() === cat.toLowerCase()}
-                      onChange={() => handleCategoryChange(cat)}
-                    />
-                    {cat}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Status</h3>
-              <div className="filter-group">
-                 <label className="filter-label">
-                   <input type="checkbox" className="filter-checkbox" defaultChecked />
-                   Show Checked Out
-                 </label>
-              </div>
-            </div>
-          </aside>
-
+          <LibrarySidebar
+            sortOption={sortOption}
+            setSortOption={setSortOption}
+            selectedTags={selectedTags}
+            toggleTag={toggleTag}
+            allTags={allTags}
+            showAvailable={showAvailable}
+            setShowAvailable={setShowAvailable}
+            showCheckedOut={showCheckedOut}
+            setShowCheckedOut={setShowCheckedOut}
+          />
         </div>
       </div>
 
-      {/* modal overlay */}
       {selectedBook && (
-        <BookModal 
-          book={selectedBook} 
-          onClose={() => setSelectedBook(null)} 
+        <BookModal
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
           onCheckout={handleCheckout}
         />
       )}
