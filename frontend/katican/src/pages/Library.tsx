@@ -24,7 +24,8 @@ const Library = () => {
 
   //tag - filters
   const [selectedTags, setSelectedTags] = useState(
-    initialCategory ? [initialCategory] : []
+    initialCategory
+      ? [initialCategory.charAt(0).toUpperCase() + initialCategory.slice(1)] : []
   );
 
   //status - filters
@@ -57,9 +58,12 @@ const Library = () => {
 
     //filter by selected tags
     if (selectedTags.length > 0) {
-      processed = processed.filter(book =>
-        book.category && selectedTags.some(tag =>
-          book.category.toLowerCase() === tag.toLowerCase()
+      processed = processed.filter(book => 
+        book.tags && Array.isArray(book.tags) && 
+        selectedTags.every(selectedTag => 
+          book.tags.some(bookTag => 
+            bookTag.toLowerCase() === selectedTag.toLowerCase()
+          )
         )
       );
     }
