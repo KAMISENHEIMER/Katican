@@ -12,12 +12,16 @@ const Library = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBook, setSelectedBook] = useState(null);
-  const [searchParams] = useSearchParams();
   
   //get category from URL parameter
-  const activeCategory = searchParams.get('category') || 'All Stories';
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialCategory = searchParams.get('category') || '';
 
-  //fetch books on Load
+  //filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState('title'); 
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
+
   useEffect(() => {
     fetch(`${API_URL}/books`)
       .then(res => res.json())
@@ -31,12 +35,49 @@ const Library = () => {
       });
   }, []);
 
-  //filter logic, MOVE THIS TO EXPRESS?
-  const filteredBooks = activeCategory === 'All Stories' 
-    ? books 
-    : books.filter(book => book.category?.toLowerCase() === activeCategory.toLowerCase());
+  useEffect(() => {
+    setActiveCategory(searchParams.get('category') || '');
+  }, [searchParams]);
 
-  //checkout book
+  const getProcessedBooks = () => {
+    let processed = [...books];
+
+    if (activeCategory && activeCategory !== 'All Collection') {
+      processed = processed.filter(book => 
+        book.category?.toLowerCase() === activeCategory.toLowerCase()
+      );
+    }
+
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      processed = processed.filter(book => 
+        book.title.toLowerCase().includes(lowerQuery) || 
+        book.author.toLowerCase().includes(lowerQuery)
+      );
+    }
+
+    processed.sort((a, b) => {
+      if (sortOption === 'title') return a.title.localeCompare(b.title);
+      if (sortOption === 'author') return a.author.localeCompare(b.author);
+      if (sortOption === 'status') return a.status.localeCompare(b.status);
+      return 0;
+    });
+
+    return processed;
+  };
+
+  const visibleBooks = getProcessedBooks();
+
+  const handleCategoryChange = (category) => {
+    if (activeCategory.toLowerCase() === category.toLowerCase()) {
+      setActiveCategory('');
+      setSearchParams({});
+    } else {
+      setActiveCategory(category);
+      setSearchParams({ category });
+    }
+  };
+
   const handleCheckout = (bookId, userName) => {
     fetch(`${API_URL}/checkout`, {
       method: 'PATCH',
@@ -49,11 +90,10 @@ const Library = () => {
         alert(data.error);
       } else {
         alert("Book successfully checked out!");
-        //update locally to avoid refresh
         setBooks(prevBooks => prevBooks.map(b => 
           b._id === bookId ? { ...b, status: 'checked out', checkedOutBy: userName } : b
         ));
-        setSelectedBook(null); //close modal
+        setSelectedBook(null);
       }
     })
     .catch(err => console.error("Checkout failed:", err));
@@ -63,33 +103,85 @@ const Library = () => {
     <div className="library-container">
       <Navbar />
       
-      {/* split these into separate components? */}
-      {/* header */}
       <div className="library-header">
-        <h1 className="library-title">{activeCategory.toUpperCase()}</h1>
-        <p className="library-subtitle">
-          {filteredBooks.length} Books Found
-        </p>
+        <h1 className="library-title">LIBRARY</h1>
+        
+        <div className="search-container">
+          <input 
+            type="text" 
+            className="search-input"
+            placeholder="Search by Title or Author..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
-      {/* book display */}
-      {loading ? (
-        <div className="loading-state">Accessing Archives...</div>
-      ) : (
-        <div className="library-grid">
-          {filteredBooks.length > 0 ? (
-            filteredBooks.map(book => (
-              <BookCard 
-                key={book._id} 
-                book={book} 
-                onClick={() => setSelectedBook(book)} 
-              />
-            ))
-          ) : (
-            <div className="empty-state">No books found in this section.</div>
-          )}
+      <div className="library-ocean-layer">
+        <div className="library-content-wrapper">
+          
+          {/* left: book grid */}
+          <div className="library-grid">
+            {loading ? (
+              <div className="loading-state">Accessing Archives...</div>
+            ) : visibleBooks.length > 0 ? (
+              visibleBooks.map(book => (
+                <BookCard 
+                  key={book._id} 
+                  book={book} 
+                  onClick={() => setSelectedBook(book)} 
+                />
+              ))
+            ) : (
+              <div className="empty-state">No books matching your criteria.</div>
+            )}
+          </div>
+
+          {/* right: filters */}
+          <aside className="library-sidebar">
+            <div className="sidebar-section">
+              <h3 className="sidebar-title">Sort Archives</h3>
+              <select 
+                className="sort-select" 
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="title">Alphabetical (A-Z)</option>
+                <option value="author">Author (A-Z)</option>
+                <option value="status">Availability</option>
+              </select>
+            </div>
+
+            <div className="sidebar-section">
+              <h3 className="sidebar-title">Filter by Category</h3>
+              <div className="filter-group">
+                {['Fantasy', 'Space', 'Heroes'].map(cat => (
+                  <label key={cat} className="filter-label">
+                    <input 
+                      type="checkbox" 
+                      className="filter-checkbox"
+                      checked={activeCategory.toLowerCase() === cat.toLowerCase()}
+                      onChange={() => handleCategoryChange(cat)}
+                    />
+                    {cat}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="sidebar-section">
+              <h3 className="sidebar-title">Status</h3>
+              <div className="filter-group">
+                 <label className="filter-label">
+                   <input type="checkbox" className="filter-checkbox" defaultChecked />
+                   Show Checked Out
+                 </label>
+              </div>
+            </div>
+          </aside>
+
         </div>
-      )}
+      </div>
 
       {/* modal overlay */}
       {selectedBook && (
