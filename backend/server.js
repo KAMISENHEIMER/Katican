@@ -36,16 +36,35 @@ async function startServer() {
 }
 startServer();
 
-//SIMPLE ROUTES (for testing)
+// EXPRESS ROUTES
 //list all books
 app.get('/books', async (req, res) => {
     try {
+        const now = new Date();
+
+        //auto return any overdue books
+        await booksCollection.updateMany(
+            { 
+                status: 'checked out', 
+                dueDate: { $lt: now } 
+            },
+            { 
+                $set: { 
+                    status: 'available', 
+                    checkedOutBy: null, 
+                    dueDate: null 
+                } 
+            }
+        );
+
+        //fetch list of books
         const books = await booksCollection.find({}).toArray();
         res.json(books);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 //list available books
 app.get('/books/available', async (req, res) => {
@@ -68,7 +87,7 @@ app.get('/books/checked-out', async (req, res) => {
 });
 
 //check-out book
-app.post('/checkout', async (req, res) => {
+app.patch('/checkout', async (req, res) => {
     const { bookId, userName } = req.body; 
 
     //ensure id and username exist in request
@@ -102,7 +121,7 @@ app.post('/checkout', async (req, res) => {
 });
 
 //check-in book
-app.post('/checkin', async (req, res) => {
+app.patch('/checkin', async (req, res) => {
     const { bookId } = req.body;
 
     try {
