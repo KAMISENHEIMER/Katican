@@ -1,0 +1,52 @@
+.library-container {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image: 
+    linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(10,10,10,0.9)),
+    url("https://www.transparenttextures.com/patterns/dark-leather.png");
+  padding-top: 120px;
+  padding-bottom: 4rem;
+  color: #E2E2E2;
+}
+
+.library-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 0 2rem;
+}
+
+.library-title {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  color: #D4AF37;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  letter-spacing: 0.1em;
+}
+
+.library-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  color: #9CA3AF;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  color: #64748B;
+  font-size: 1.2rem;
+  margin-top: 4rem;
+  letter-spacing: 0.1em;
+}
