@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import '../styles/BookModal.css';
 
-const BookModal = ({ book, onClose, onCheckout }) => {
+const BookModal = ({ book, onClose, onCheckout, onCheckIn }) => {
   const [userName, setUserName] = useState('');
   
   const handleCheckoutClick = () => {
@@ -53,10 +53,19 @@ const BookModal = ({ book, onClose, onCheckout }) => {
                   </button>
                 </div>
               ) : (
-                <div className="checked-out-msg">
-                  This book is currently held by <strong>{book.checkedOutBy}</strong>.
-                  <br/>
-                  Due: {new Date(book.dueDate).toLocaleDateString()}
+                <div className="checked-out-info">
+                  <div className="checked-out-msg">
+                    This book is currently checked out.
+                    <br/>
+                    Due: {new Date(book.dueDate).toLocaleDateString()}
+                    
+                </div>
+                  {/* temp button to force a chekin */}
+                  <button 
+                    className="checkin-btn" 
+                    onClick={() => onCheckIn(book._id)}> 
+                    Check-In 
+                  </button>
                 </div>
               )}
             </div>

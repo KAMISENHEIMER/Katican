@@ -129,6 +129,28 @@ const Library = () => {
       .catch(err => console.error("Checkout failed:", err));
   };
 
+  //check-in logic
+  const handleCheckIn = (bookId) => {
+    fetch(`${API_URL}/checkin`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert("Book successfully returned!");
+        setBooks(prevBooks => prevBooks.map(b => 
+          b._id === bookId ? { ...b, status: 'available', checkedOutBy: null, dueDate: null } : b
+        ));
+        setSelectedBook(null);
+      }
+    })
+    .catch(err => console.error("Check-in failed:", err));
+  };
+
   return (
     <div className="library-container">
       <Navbar />
@@ -174,6 +196,7 @@ const Library = () => {
           book={selectedBook}
           onClose={() => setSelectedBook(null)}
           onCheckout={handleCheckout}
+          onCheckIn={handleCheckIn}
         />
       )}
     </div>
