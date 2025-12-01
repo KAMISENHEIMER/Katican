@@ -22,7 +22,7 @@
   overflow: hidden;
 }
 
-/* fake leather texture from online for placeholder cover */
+/* border shadow over transparent cover */
 .book-cover::before {
   content: '';
   position: absolute;

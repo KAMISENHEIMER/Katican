@@ -1,19 +1,21 @@
 import React from 'react';
 import '../styles/BookCard.css';
 
+// helper to create placeholder title
+const acronym = (str) =>
+  str
+    .split(" ")
+    .map(word => word[0]?.toUpperCase())
+    .join("")
+    .slice(0, 3); // max 3 letters
+
 const BookCard = ({ book, onClick }) => {
-  // placeholder color based on title length
-  const hue = (book.title.length * 25) % 360; 
-  const placeholderStyle = {
-    backgroundColor: `hsl(${hue}, 40%, 20%)`,
-    boxShadow: `0 0 20px hsl(${hue}, 40%, 10%)`
-  };
 
   return (
     <div className="book-card" onClick={onClick}>
-      <div className="book-cover" style={placeholderStyle}>
-        {/* placeholder text as cover */}
-        <span className="cover-title">{book.title.substring(0, 2)}</span>
+      {/* placeholder cover, clear background and text */}
+      <div className="book-cover">
+        <span className="cover-title">{acronym(book.title)}</span>
       </div>
       
       <div className="book-info">
