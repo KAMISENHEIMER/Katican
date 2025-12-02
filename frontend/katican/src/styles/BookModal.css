@@ -163,7 +163,51 @@
   letter-spacing: 0.1em;
   cursor: pointer;
   transition: all 0.3s;
+  height
 }
 .checkin-btn:hover {
   background-color: #fff;
+}
+
+/* styles when on shelf */
+.owner-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.read-now-btn {
+  flex: 1;
+  background-color: #D4AF37;
+  color: #000;
+  border: none;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.read-now-btn:hover {
+  background-color: #fff;
+  transform: translateY(-2px);
+}
+
+.return-btn-small {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #E2E2E2;
+  padding: 0 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.return-btn-small:hover {
+  border-color: #F87171;
+  color: #F87171;
 }

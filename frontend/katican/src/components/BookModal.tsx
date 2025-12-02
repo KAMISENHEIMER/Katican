@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
 import '../styles/BookModal.css';
 
-const BookModal = ({ book, onClose, onCheckout, onCheckIn }) => {
+const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) => {
   const [userName, setUserName] = useState('');
   
   const handleCheckoutClick = () => {
@@ -39,34 +39,43 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn }) => {
             </p>
 
             <div className="detail-actions">
-              {book.status === 'available' ? (
-                <div className="checkout-form">
-                  <input 
-                    type="text" 
-                    placeholder="Sign your name..." 
-                    className="name-input"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                  />
-                  <button className="checkout-btn" onClick={handleCheckoutClick}>
-                    Check Out
+              {/* if is owned by you */}
+              {isOwner ? (
+                <div className="owner-actions">
+                  <button className="read-now-btn" onClick={onRead}>
+                    <BookOpen size={18} style={{marginRight: '8px'}}/> 
+                    Read Now
+                  </button>
+                  <button className="return-btn-small" onClick={() => onCheckIn(book._id)}>
+                    Return Book
                   </button>
                 </div>
               ) : (
-                <div className="checked-out-info">
-                  <div className="checked-out-msg">
-                    This book is currently checked out.
-                    <br/>
-                    Due: {new Date(book.dueDate).toLocaleDateString()}
-                    
-                </div>
-                  {/* temp button to force a chekin */}
-                  <button 
-                    className="checkin-btn" 
-                    onClick={() => onCheckIn(book._id)}> 
-                    Check-In 
-                  </button>
-                </div>
+                /* === STANDARD LIBRARY VIEW === */
+                book.status === 'available' ? (
+                  <div className="checkout-form">
+                    <input 
+                      type="text" 
+                      placeholder="Sign your name..." 
+                      className="name-input"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                    />
+                    <button className="checkout-btn" onClick={handleCheckoutClick}>
+                      Check Out
+                    </button>
+                  </div>
+                ) : (
+                  <div className="checked-out-info">
+                    <div className="checked-out-msg">
+                      This book is currently checked out.
+                      <br/>
+                      Due: {new Date(book.dueDate).toLocaleDateString()}
+                    </div>
+                    {/* temp button to force a chekin */}
+                    {onCheckIn && <button className="checkin-btn" onClick={() => onCheckIn(book._id)}>Return Book</button>}
+                  </div>
+                )
               )}
             </div>
           </div>

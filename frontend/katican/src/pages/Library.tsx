@@ -119,7 +119,7 @@ const Library = () => {
         if (data.error) {
           alert(data.error);
         } else {
-          alert("Book successfully checked out!");
+          alert("Book successfully checked out! \nView your shelf to read!");
           setBooks(prevBooks => prevBooks.map(b =>
             b._id === bookId ? { ...b, status: 'checked out', checkedOutBy: userName } : b
           ));

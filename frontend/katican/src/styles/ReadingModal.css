@@ -1,0 +1,109 @@
+.reading-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reading-modal-content {
+  width: 100%;
+  max-width: 900px;
+  height: 90vh;
+  overflow-y: auto;
+  /* background-color: #fdfbf7; */
+  /* background-color: #2c1810; */
+  /* background-color: #1f1212; */
+  /* background-image: linear-gradient(135deg, #1a1a2e 0%, #050505 100%); */
+  background-image: radial-gradient(circle at 50% 0%, #1f1212 0%, #0f0a0a 70%);
+  /* color: #2c1810; */
+  color: #fdfbf7;
+  border: none;
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #d4af37 transparent;
+}
+
+.reading-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: .6rem;
+  line-height: 0;
+  background: #2c1d10;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  z-index: 100;
+  transition: background 0.3s ease;
+}
+
+.reading-close-btn:hover {
+  background: #D4AF37;
+  color: #000;
+}
+
+.reading-inner-wrapper {
+  padding: 4rem 3rem;
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.reading-title {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  /* color: #2c1810; */
+  color: #fdfbf7;
+;
+}
+
+.reading-author {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 4rem;
+  /* color: #5d4037; */
+  color: #bcbab7;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+}
+
+.reading-text-body {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.reading-footer {
+  margin-top: 5rem;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 2rem;
+}
+
+.reading-return-btn {
+  padding: 1rem 2rem;
+  background: #2c1810;
+  color: #fff;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reading-return-btn:hover {
+  background: #D4AF37;
+  color: #000;
+}
