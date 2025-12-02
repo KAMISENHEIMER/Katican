@@ -1,16 +1,22 @@
 import React from 'react';
 import '../styles/Navbar.css';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="navbar">
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <a href="#" className="nav-logo">KATICAN</a>
+        <a className="nav-logo" onClick={() => navigate('/')} >KATICAN</a>
       </div>
       <ul className="nav-links">
-        <li><a href="#" className="nav-item">Home</a></li>
-        <li><a href="#" className="nav-item">Library</a></li> {/*links go here*/}
-        <li><a href="#" className="nav-item">About</a></li>
+        <li><a className="nav-item" onClick={() => navigate('/')}>Home</a></li>
+        <li><a className="nav-item" onClick={() => navigate('/library')}>Library</a></li>
+        <li><a className="nav-item" onClick={() => navigate('/shelf')}>Your Shelf</a></li>
+        <li><a className="nav-item" onClick={() => navigate('/about')}>About</a></li>
       </ul>
     </nav>
   );
