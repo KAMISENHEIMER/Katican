@@ -12,7 +12,7 @@ const LibraryGrid: React.FC<LibraryGridProps> = ({ loading, books, onBookClick }
   return (
     <div className="library-grid">
       {loading ? (
-        <div className="loading-state">Our scribes are retrieving the books... <br />This may take a second.</div>
+        <div className="loading-state">Our scribes are retrieving the books... <br />This may take a few minutes.</div>
       ) : books.length > 0 ? (
         books.map(book => (
           <BookCard 
