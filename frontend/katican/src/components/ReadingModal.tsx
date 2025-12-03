@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import '../styles/ReadingModal.css';
 import { X } from 'lucide-react';
+import type { Book } from '../types';
 
 // const API_URL = "http://localhost:3000";
 const API_URL = "https://katican-api.onrender.com";
 
-const ReadingModal = ({ book, onClose, onReturn }) => {
+interface ReadingModalProps {
+  book: Book | null;
+  onClose: () => void;
+  onReturn: (bookId: string) => void;
+}
+
+const ReadingModal: React.FC<ReadingModalProps> = ({ book, onClose, onReturn }) => {
   const [fullContent, setFullContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
