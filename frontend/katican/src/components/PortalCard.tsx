@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import '../styles/PortalCard.css';
 
-const PortalCard = ({ title, icon: Icon, desc, color }) => {
+interface PortalCardProps {
+  title: string;
+  icon: React.ElementType; 
+  desc: string;
+  color: string;
+}
+
+const PortalCard: React.FC<PortalCardProps> = ({ title, icon: Icon, desc, color }) => {
   const [hover, setHover] = useState(false);
 
   //different styles for each card on hover
