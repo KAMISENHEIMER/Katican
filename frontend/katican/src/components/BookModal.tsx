@@ -1,8 +1,18 @@
 import { useState } from 'react';
 import { X, BookOpen } from 'lucide-react';
 import '../styles/BookModal.css';
+import type { Book } from '../types';
 
-const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) => {
+interface BookModalProps {
+  book: Book;
+  onClose: () => void;
+  onCheckout?: (bookId: string, userName: string) => void;
+  onCheckIn?: (bookId: string) => void;
+  onRead?: () => void;
+  isOwner?: boolean;
+}
+
+const BookModal: React.FC<BookModalProps> = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner = false }) => {
   const [userName, setUserName] = useState('');
   
   const handleCheckoutClick = () => {
@@ -10,7 +20,7 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) =>
       alert("Enter your name to check out this book.");
       return;
     }
-    onCheckout(book._id, userName);
+    onCheckout!(book._id, userName);
   };
 
   return (
@@ -35,7 +45,7 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) =>
             </div>
 
             <p className="detail-desc">
-              {book.description || "This manuscript contains ancient wisdom. No further description is available in the archives."}
+              {book.description || "No description exists."}
             </p>
 
             <div className="detail-actions">
@@ -46,12 +56,12 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) =>
                     <BookOpen size={18} style={{marginRight: '8px'}}/> 
                     Read Now
                   </button>
-                  <button className="return-btn-small" onClick={() => onCheckIn(book._id)}>
+                  <button className="return-btn-small" onClick={() => onCheckIn!(book._id)}>
                     Return Book
                   </button>
                 </div>
               ) : (
-                /* === STANDARD LIBRARY VIEW === */
+                /* library views */
                 book.status === 'available' ? (
                   <div className="checkout-form">
                     <input 
@@ -70,7 +80,7 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) =>
                     <div className="checked-out-msg">
                       This book is currently checked out.
                       <br/>
-                      Due: {new Date(book.dueDate).toLocaleString()}
+                      Due: {book.dueDate ? new Date(book.dueDate).toLocaleString() : 'N/A'}
                     </div>
                     {/* temp button to force a chekin */}
                     {/* {onCheckIn && <button className="checkin-btn" onClick={() => onCheckIn(book._id)}>Return Book</button>} */}
