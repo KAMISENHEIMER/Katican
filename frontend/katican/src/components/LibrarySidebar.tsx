@@ -1,6 +1,18 @@
 import '../styles/LibrarySidebar.css';
 
-const LibrarySidebar = ({ 
+interface LibrarySidebarProps {
+  sortOption: string;
+  setSortOption: (option: string) => void;
+  selectedTags: string[];
+  toggleTag: (tag: string) => void;
+  allTags: string[];
+  showAvailable: boolean;
+  setShowAvailable: (show: boolean) => void;
+  showCheckedOut: boolean;
+  setShowCheckedOut: (show: boolean) => void;
+}
+
+const LibrarySidebar: React.FC<LibrarySidebarProps> = ({ 
   sortOption, 
   setSortOption, 
   selectedTags, 
