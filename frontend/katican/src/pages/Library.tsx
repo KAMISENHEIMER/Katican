@@ -5,34 +5,36 @@ import BookModal from '../components/BookModal.tsx';
 import LibraryGrid from '../components/LibraryGrid';
 import LibrarySidebar from '../components/LibrarySidebar';
 import '../styles/Library.css';
+import type { Book } from '../types.tsx';
+
 
 // const API_URL = "http://localhost:3000";
 const API_URL = "https://katican-api.onrender.com";
 
-const Library = () => {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedBook, setSelectedBook] = useState(null);
+const Library: React.FC = () => {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   //get category from URL parameter
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, /*setSearchParams */ ] = useSearchParams();
   const initialCategory = searchParams.get('category');
 
   //filter states
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('title');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortOption, setSortOption] = useState<string>('title');
 
   //tag - filters
-  const [selectedTags, setSelectedTags] = useState(
+  const [selectedTags, setSelectedTags] = useState<string[]>(
     initialCategory
       ? [initialCategory.charAt(0).toUpperCase() + initialCategory.slice(1)] : []
   );
 
   //status - filters
-  const [showAvailable, setShowAvailable] = useState(true);
-  const [showCheckedOut, setShowCheckedOut] = useState(true);
+  const [showAvailable, setShowAvailable] = useState<boolean>(true);
+  const [showCheckedOut, setShowCheckedOut] = useState<boolean>(true);
 
-  const allTags = [
+  const allTags: string[] = [
     'Fantasy', 'Space', 'Heroes',
     'Comedy', 'Tragedy', 'Poetry',
     'Adventure',
@@ -61,7 +63,7 @@ const Library = () => {
       processed = processed.filter(book => 
         book.tags && Array.isArray(book.tags) && 
         selectedTags.every(selectedTag => 
-          book.tags.some(bookTag => 
+          book.tags!.some(bookTag => 
             bookTag.toLowerCase() === selectedTag.toLowerCase()
           )
         )
@@ -99,7 +101,7 @@ const Library = () => {
 
   const visibleBooks = getProcessedBooks();
 
-  const toggleTag = (tag) => {
+  const toggleTag = (tag: string) => {
     setSelectedTags(prev =>
       prev.includes(tag)
         ? prev.filter(t => t !== tag)
@@ -108,7 +110,7 @@ const Library = () => {
   };
 
   //checkout logic
-  const handleCheckout = (bookId, userName) => {
+  const handleCheckout = (bookId: string, userName: string) => {
     fetch(`${API_URL}/checkout`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -130,7 +132,7 @@ const Library = () => {
   };
 
   //check-in logic
-  const handleCheckIn = (bookId) => {
+  const handleCheckIn = (bookId: string) => {
     fetch(`${API_URL}/checkin`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
