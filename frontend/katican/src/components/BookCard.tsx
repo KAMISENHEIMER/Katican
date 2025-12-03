@@ -1,4 +1,5 @@
 import '../styles/BookCard.css';
+import type { Book } from '../types.tsx';
 
 // helper to create placeholder title
 const acronym = (str: string) =>
@@ -8,7 +9,12 @@ const acronym = (str: string) =>
     .join("")
     .slice(0, 3); // max 3 letters
 
-const BookCard = ({ book, onClick }) => {
+interface BookCardProps {
+  book: Book;
+  onClick: () => void;
+}
+    
+const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
 
   return (
     <div className="book-card" onClick={onClick}>
