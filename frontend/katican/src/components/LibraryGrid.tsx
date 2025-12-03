@@ -1,11 +1,18 @@
 import BookCard from '../components/BookCard.tsx';
 import '../styles/Library.css';
+import type { Book } from '../types'; // Import shared type
 
-const LibraryGrid = ({ loading, books, onBookClick }) => {
+interface LibraryGridProps {
+  loading: boolean;
+  books: Book[];
+  onBookClick: (book: Book) => void;
+}
+
+const LibraryGrid: React.FC<LibraryGridProps> = ({ loading, books, onBookClick }) => {
   return (
     <div className="library-grid">
       {loading ? (
-        <div className="loading-state">Accessing Archives...</div>
+        <div className="loading-state">Our scribes are retrieving the books... <br />This may take a second.</div>
       ) : books.length > 0 ? (
         books.map(book => (
           <BookCard 
