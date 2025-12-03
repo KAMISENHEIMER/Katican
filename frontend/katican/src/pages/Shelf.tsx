@@ -5,28 +5,29 @@ import LibraryBookCard from '../components/BookCard';
 import BookModal from '../components/BookModal';
 import ReadingModal from '../components/ReadingModal';
 import '../styles/Shelf.css';
+import type { Book } from '../types';
 
 // const API_URL = "http://localhost:3000";
 const API_URL = "https://katican-api.onrender.com";
 
-const Shelf = () => {
-  const [currentUser, setCurrentUser] = useState(localStorage.getItem('katican_user') || '');
-  const [inputName, setInputName] = useState('');
-  const [myBooks, setMyBooks] = useState([]);
-  const [loading, setLoading] = useState(false);
+const Shelf: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<string>(localStorage.getItem('katican_user') || '');
+  const [inputName, setInputName] = useState<string>('');
+  const [myBooks, setMyBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   
   // modal states
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [readingBook, setReadingBook] = useState(null);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [readingBook, setReadingBook] = useState<Book | null>(null);
   
   const navigate = useNavigate();
 
   //fetch user's books
-  const fetchMyShelf = (username) => {
+  const fetchMyShelf = (username: string) => {
     setLoading(true);
     fetch(`${API_URL}/books`)
       .then(res => res.json())
-      .then(data => {
+      .then((data: Book[]) => {
         //filter for books checked out by this specific user
         const userBooks = data.filter(b => 
           b.status === 'checked out' && 
@@ -49,7 +50,7 @@ const Shelf = () => {
     }
   }, [currentUser]);
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputName.trim()) return;
     localStorage.setItem('katican_user', inputName);
@@ -63,9 +64,9 @@ const Shelf = () => {
   };
 
   //reading modal
-  const handleRead = (bookId) => {
+  const handleRead = (bookId: string) => {
     const book = myBooks.find(b => b._id === bookId);
-    setReadingBook(book);
+    setReadingBook(book!);
     setSelectedBook(null);
   };
 
@@ -75,7 +76,7 @@ const Shelf = () => {
   };
 
   //handle returns from shelf
-  const handleReturn = (bookId) => {
+  const handleReturn = (bookId: string) => {
     fetch(`${API_URL}/checkin`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
