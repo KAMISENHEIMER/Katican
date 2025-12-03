@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styles/PortalCard.css';
 
 const PortalCard = ({ title, icon: Icon, desc, color }) => {

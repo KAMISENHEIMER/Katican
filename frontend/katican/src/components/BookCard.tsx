@@ -1,8 +1,7 @@
-import React from 'react';
 import '../styles/BookCard.css';
 
 // helper to create placeholder title
-const acronym = (str) =>
+const acronym = (str: string) =>
   str
     .split(" ")
     .map(word => word[0]?.toUpperCase())

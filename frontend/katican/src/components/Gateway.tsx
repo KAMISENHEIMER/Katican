@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sword, Rocket, Zap } from 'lucide-react';
 import PortalCard from './PortalCard.tsx';

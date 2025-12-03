@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/Hero.css';
 import { ChevronDown } from 'lucide-react';
 

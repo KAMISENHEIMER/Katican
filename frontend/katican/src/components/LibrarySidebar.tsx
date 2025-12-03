@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/LibrarySidebar.css';
 
 const LibrarySidebar = ({ 

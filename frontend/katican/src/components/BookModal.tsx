@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, BookOpen } from 'lucide-react';
 import '../styles/BookModal.css';
 
