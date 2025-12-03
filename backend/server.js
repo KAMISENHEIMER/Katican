@@ -57,14 +57,33 @@ app.get('/books', async (req, res) => {
             }
         );
 
-        //fetch list of books
-        const books = await booksCollection.find({}).toArray();
+        //fetch list of books (except content)
+        const books = await booksCollection.find({})
+            .project({ content: 0 }) 
+            .toArray();
+
         res.json(books);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
+//get all info about a book (including content)
+app.get('/books/:id', async (req, res) => {
+    try {
+        const bookId = req.params.id;
+
+        const book = await booksCollection.findOne({ _id: new ObjectId(bookId) });
+        
+        if (!book) {
+            return res.status(404).json({ error: "Book not found" });
+        }
+        
+        res.json(book);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 //list available books
 app.get('/books/available', async (req, res) => {
