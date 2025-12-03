@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../styles/ReadingModal.css';
 import { X } from 'lucide-react';
 
-//CHANGE HERE
-const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+const API_URL = "https://katican-api.onrender.com";
 
 const ReadingModal = ({ book, onClose, onReturn }) => {
   const [fullContent, setFullContent] = useState(null);

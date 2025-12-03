@@ -6,8 +6,8 @@ import LibraryGrid from '../components/LibraryGrid';
 import LibrarySidebar from '../components/LibrarySidebar';
 import '../styles/Library.css';
 
-// CHANGE HERE to when switching to render
-const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+const API_URL = "https://katican-api.onrender.com";
 
 const Library = () => {
   const [books, setBooks] = useState([]);

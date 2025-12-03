@@ -6,8 +6,8 @@ import BookModal from '../components/BookModal';
 import ReadingModal from '../components/ReadingModal';
 import '../styles/Shelf.css';
 
-// UPDATE THIS TOO when on Render
-const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+const API_URL = "https://katican-api.onrender.com";
 
 const Shelf = () => {
   const [currentUser, setCurrentUser] = useState(localStorage.getItem('katican_user') || '');

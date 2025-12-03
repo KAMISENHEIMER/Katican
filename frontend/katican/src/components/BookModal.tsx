@@ -70,10 +70,10 @@ const BookModal = ({ book, onClose, onCheckout, onCheckIn, onRead, isOwner }) =>
                     <div className="checked-out-msg">
                       This book is currently checked out.
                       <br/>
-                      Due: {new Date(book.dueDate).toLocaleDateString()}
+                      Due: {new Date(book.dueDate).toLocaleString()}
                     </div>
                     {/* temp button to force a chekin */}
-                    {onCheckIn && <button className="checkin-btn" onClick={() => onCheckIn(book._id)}>Return Book</button>}
+                    {/* {onCheckIn && <button className="checkin-btn" onClick={() => onCheckIn(book._id)}>Return Book</button>} */}
                   </div>
                 )
               )}
