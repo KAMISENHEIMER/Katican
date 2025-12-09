@@ -37,7 +37,7 @@ const Library: React.FC = () => {
   const allTags: string[] = [
     'Fantasy', 'Space', 'Heroes',
     'Comedy', 'Tragedy', 'Poetry',
-    'Adventure',
+    'Adventure', 'Caenar', 
   ];
 
   //fetch entire book list
