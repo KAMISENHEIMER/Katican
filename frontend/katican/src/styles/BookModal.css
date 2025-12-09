@@ -91,10 +91,44 @@
 .detail-meta {
   display: flex;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
   color: #64748B;
 }
+
+.tags-section {
+  font-size: 0.9rem;
+  color: #64748B;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modal-tag-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94A3B8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.03);
+  /* transition: all 0.2s ease; */
+}
+
+/* .modal-tag-pill:hover {
+  border-color: #D4AF37;
+  color: #D4AF37;
+  background: rgba(212, 175, 55, 0.05);
+} */
 
 .detail-desc {
   font-family: 'Cormorant Garamond', serif;

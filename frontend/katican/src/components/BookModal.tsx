@@ -44,6 +44,17 @@ const BookModal: React.FC<BookModalProps> = ({ book, onClose, onCheckout, onChec
               <span><strong>Publisher:</strong> {book.publisher || 'Unknown'}</span>
             </div>
 
+            <span className="tags-section"><strong>TAGS:</strong>
+            {book.tags && book.tags.length > 0 && (
+              <span className="detail-tags">
+                {book.tags.map((tag, index) => (
+                  <span key={index} className="modal-tag-pill">
+                    {tag}
+                  </span>
+                ))}
+              </span>
+            )}</span>            
+
             <p className="detail-desc">
               {book.description || "No description exists."}
             </p>
